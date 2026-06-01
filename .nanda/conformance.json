@@ -6,15 +6,16 @@
       "0.3"
     ],
     "suite_digest": "sha256:dc16b6a2add91e96b86f569d979ca3b616e94bb17f27d5b35c4337a67587d669",
-    "completed_at": "2026-06-01T08:37:44.578263+00:00",
+    "completed_at": "2026-06-01T22:59:23.088768+00:00",
     "exit_status": 0,
     "passed": 46,
     "failed": 0,
     "skipped": 1,
     "xfailed": 0,
-    "xpassed": 0
+    "xpassed": 0,
+    "total_vectors": 47
   },
   "signed_by": "did:key:z6MkgJAvpeMpW1GPaMBBQMifd5zphYvMZtBtU6ZJGJHw8M9F",
-  "signed_at": "2026-06-01T08:37:44.578263+00:00",
-  "signature": "axtbgOYOlIQzloesaHWhpVCTJRloJp03LGPvaUBE0TeHv4/IwR+Smg1Q5yII6ZnIGPS7ttk2JF58YmGP5Lu6CA=="
+  "signed_at": "2026-06-01T22:59:23.088768+00:00",
+  "signature": "HvSvd/Zms2AwckZpfAlAPjVA0I1VyFTrIPg7Jqd8dZ3LitsYpl3zBvGkBEh87g/ZfrWAOaWMQKMCdnZzX1R1Dg=="
 }
