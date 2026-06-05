@@ -1,8 +1,8 @@
 # sm-member-sdk
 
-**The client signing surface for federated AI-agent chapters — identity, canonical strings, Ed25519 signatures, and the header set. Nothing else.**
+**The client surface for federated AI-agent chapters — identity, signed requests, and signed ARP receipts. No transport, no framework.**
 
-A *member* is an AI agent with a cryptographic identity that signs its requests so a chapter can authenticate them. `sm-member-sdk` is exactly that surface and no more: it mints a did:key identity, builds the canonical string the chapter will re-derive, signs it with Ed25519, and hands you the headers to attach. No HTTP client, no framework, no transport opinion — just the bytes a chapter will verify.
+A *member* is an AI agent with a cryptographic identity. It signs its **requests** so a chapter can authenticate them, and signs a **receipt** for each action it takes so anyone can later verify what it did. `sm-member-sdk` is exactly those surfaces: a did:key identity, the canonical string the chapter re-derives, Ed25519 signatures, the header set — and an ARP receipt-emitting agent with its Agency Log. No HTTP client, no framework, no transport opinion — just the bytes a chapter will verify.
 
 ```python
 from sm_member_sdk import Identity, sign_request
@@ -26,6 +26,10 @@ A chapter authenticates a request by re-deriving a **canonical string** from its
 | `Identity.from_seed(agent_id, seed)` | Reconstruct an identity from a stored 32-byte seed |
 | `sign_request(identity, body, timestamp)` | v0.2 signed-request headers |
 | `sign_request(..., method=, url_path=, nonce=)` | v0.3 signed-request headers (replay-resistant) |
+| `MemberAgent(identity, AgencyLog(...))` | A receipt-emitting agent + its Agency Log |
+| `agent.record(category=, human_summary=, ...)` | Issue + hash-chain + log a signed ARP receipt |
+| `issue(identity, action=, ...)` | One-shot signed receipt bound to an identity |
+| `verify_receipt(receipt)` | Verify a counterparty's receipt before trusting it |
 | `crypto.derive_did_key` / `parse_did_key` | did:key ↔ public key |
 
 ### Two signing schemes
@@ -35,13 +39,31 @@ A chapter authenticates a request by re-deriving a **canonical string** from its
 
 `sign_request` selects v0.3 when you pass `method`, `url_path`, and `nonce`; otherwise v0.2.
 
+## Receipts (ARP)
+
+Signing requests proves a member *spoke*; signing **receipts** proves what it *did*. A member emits an [Agency Receipt Protocol](https://github.com/Sharathvc23/sm-arp) receipt for each action — Ed25519-signed, JCS-canonical, hash-chained — and keeps them in its **Agency Log** (ARP §10.1). Emission is the default, not an add-on.
+
+![ARP receipt flow](docs/figures/arp-receipt-flow.svg)
+
+```python
+from sm_member_sdk import Identity, MemberAgent, AgencyLog
+
+agent = MemberAgent(Identity.generate("alice"), AgencyLog("alice.sqlite"))
+receipt = agent.record(category="data_shared", human_summary="shared my calendar")
+# signed, hash-chained, logged — ready to POST to a chapter's /api/receipts
+```
+
+The same identity signs both requests and receipts; `did:key` derivation is byte-identical to the canonical [`sm_arp`](https://github.com/Sharathvc23/sm-arp) library, so a receipt is attributed to the member's DID. A member is also a *consumer* — `verify_receipt` checks the receipts its counterparties present before trusting them.
+
 ## Conformance
 
-The SDK ships a `ConformanceAdapter` that plugs into the chapter-protocol **client conformance suite**, and a signed badge at `.nanda/conformance.json` attesting it passes. Point the suite at it with:
+The SDK ships **two** signed badges:
 
-```
-pytest conformance/client --adapter=sm_member_sdk.conformance:ConformanceAdapter
-```
+- `.nanda/conformance.json` — the chapter-protocol **client** suite, via a `ConformanceAdapter`:
+  ```
+  pytest conformance/client --adapter=sm_member_sdk.conformance:ConformanceAdapter
+  ```
+- `.nanda/arp-conformance.json` — the **ARP receipt** suite (a distinct corpus → a distinct badge), generated mechanically by `scripts/gen_arp_badge.py`, which runs the canonical receipt vectors through the SDK's `verify_receipt` surface and counts what it accepts/rejects.
 
 See the [conformance toolkit](https://github.com/Sharathvc23/sm-conformance) for how badges are produced and verified.
 

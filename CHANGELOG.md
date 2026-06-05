@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **ARP receipts.** The SDK is now ARP-native via the `sm_arp` consumable library:
+  - `MemberAgent(identity, AgencyLog(...))` — `.record(category, human_summary, ...)` issues a signed receipt, hash-chains it to the agent's previous one (§6.4), appends to the Agency Log (§10.1), and returns it. Emission is the default, not an add-on; the chain resumes from an existing log across restarts.
+  - `issue(identity, action=...)` — one-shot signed receipt bound to an identity; `principal_did` defaults to the member's own DID, overridable for delegated action.
+  - `verify_receipt` — the consumer surface: verify a counterparty's receipt before trusting it.
+- **Signed ARP conformance badge** at `.nanda/arp-conformance.json`, generated mechanically by `scripts/gen_arp_badge.py` (the canonical receipt vectors run through the SDK's `verify_receipt`).
+
+`did:key` derivation is byte-identical to `sm_arp`, so receipts are attributed to the member's DID.
+
 ## [0.1.0] — 2026-06-01
 
 Initial public release.
