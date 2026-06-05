@@ -94,3 +94,15 @@ def test_tampered_logged_receipt_fails_verification(alice: Identity, tmp_path) -
     r = agent.record(category="data_shared", human_summary="original")
     r["action"]["human_summary"] = "rewritten"
     assert not verify_receipt(r).ok
+
+
+def test_sdk_verifies_a_counterpartys_receipt(alice: Identity) -> None:
+    """The SDK is also a consumer: it verifies receipts presented by others
+    before trusting them, via its own verify_receipt surface."""
+    from sm_member_sdk import verify_receipt as sdk_verify
+
+    bob = Identity.generate("bob")
+    r = issue(bob, action=build_action(category="message_sent", human_summary="from bob"))
+    assert sdk_verify(r).ok
+    r["signature"] = "AAAAAAAA"
+    assert not sdk_verify(r).ok
