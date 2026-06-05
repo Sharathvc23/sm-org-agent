@@ -51,9 +51,15 @@ The SDK exposes its operations to a conformance adapter and ships a signed badge
 
 **Consequence:** "this client speaks the protocol" becomes a verifiable artifact, not a claim — exactly what a chapter or registry can demand before trusting a signature.
 
+### 3.5 A member's actions leave receipts
+
+Signing a request proves a member *spoke*. It does not record what it *did*. So a member also issues an [ARP](https://github.com/Sharathvc23/sm-arp) receipt for each action — the same Ed25519 identity, now signing a JCS-canonical, hash-chained envelope — and keeps them in an **Agency Log**. The receipt envelope is the one canonical `sm_arp` library, shared with the chapter, so `did:key` derivation and canonical bytes are byte-identical on both ends. A member verifies its counterparties' receipts through the same library before trusting them.
+
+**Consequence:** the member is a first-class participant in a verifiable history, not just an authenticated caller. Its actions are attributable to its DID without a trusted intermediary, and it ships a second signed badge attesting it passes the ARP receipt suite — run mechanically through its own `verify_receipt` surface.
+
 ## 4. Where This Fits
 
-`sm-member-sdk` is the client end of a protocol whose server end is a chapter. A member mints an identity here, signs its requests here, and sends them to a chapter that verifies them. The two were built and conformance-tested independently, against the same shared vectors — which is the point: neither has to trust the other's implementation, only the shared spec.
+`sm-member-sdk` is the client end of a protocol whose server end is a chapter. A member mints an identity here, signs its requests *and its receipts* here, and sends them to a chapter that verifies both. The two were built and conformance-tested independently, against the same shared vectors and the same `sm_arp` receipt library — which is the point: neither has to trust the other's implementation, only the shared spec.
 
 ## 5. NANDA Alignment
 
