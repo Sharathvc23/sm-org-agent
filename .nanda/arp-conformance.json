@@ -1,0 +1,24 @@
+{
+  "payload": {
+    "schema_version": 1,
+    "runtime": "sm-member-sdk",
+    "protocol_versions": [
+      "0.1"
+    ],
+    "suite_digest": "sha256:d3610cf5bf09bef6dc49db731a8d93aaf3f553b0df8acf80790d152c8e9dc513",
+    "completed_at": "2026-06-05T02:26:45+00:00",
+    "exit_status": 0,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "total_vectors": 22,
+    "extensions": {
+      "arp.conformance.profile": "receipts-0.1"
+    }
+  },
+  "signed_by": "did:key:z6MkgJAvpeMpW1GPaMBBQMifd5zphYvMZtBtU6ZJGJHw8M9F",
+  "signed_at": "2026-06-05T02:26:45+00:00",
+  "signature": "at8L8Z7S5xdi52d0LX1ui4+YJJUYF+tI3lxtYKAoebyxufdrje31zhT8g9NPeu1W7Mk3karkepUjTr4AgNzvDg=="
+}
