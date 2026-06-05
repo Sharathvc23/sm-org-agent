@@ -16,12 +16,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from sm_arp import AgencyLog, build_action, chain_link, issue_receipt
+from sm_arp import AgencyLog, build_action, chain_link, issue_receipt, verify_receipt
 from sm_arp import Identity as _ArpIdentity
 
 from sm_member_sdk.identity import Identity
 
-__all__ = ["AgencyLog", "MemberAgent", "build_action", "issue"]
+# A member is both a producer (issue / MemberAgent) and a consumer: it verifies
+# the receipts its counterparties present before trusting them. `verify_receipt`
+# is that consumer surface — the same canonical verifier every runtime shares.
+__all__ = ["AgencyLog", "MemberAgent", "build_action", "issue", "verify_receipt"]
 
 
 def _as_arp(identity: Identity) -> _ArpIdentity:
