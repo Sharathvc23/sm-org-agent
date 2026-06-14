@@ -44,9 +44,7 @@ def test_sign_request_v02_signature_verifies() -> None:
 
 def test_sign_request_v03_signature_verifies() -> None:
     ident = Identity.generate("alice")
-    h = signing.sign_request(
-        ident, "BODY", "1700000000", method="POST", url_path="/api/feedback", nonce="n1"
-    )
+    h = signing.sign_request(ident, "BODY", "1700000000", method="POST", url_path="/api/feedback", nonce="n1")
     canonical = signing.canonical_string_v03(
         "POST", "/api/feedback", "BODY", "alice", "1700000000", "n1"
     ).encode()

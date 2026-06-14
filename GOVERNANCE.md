@@ -16,7 +16,7 @@ A build is conformant *iff* the client conformance suite passes against its adap
 
 ## Contributions
 
-Issues and pull requests are welcome. A change that touches the produced wire must keep conformance green and update the badge. All code keeps the gate green: `ruff`, `mypy --strict`, and `pytest` at or above the coverage floor.
+Issues and pull requests are welcome. A change that touches the produced wire must keep conformance green and update the badge. All code keeps the gate green: `ruff`, `ruff format`, `mypy --strict`, and `pytest` at or above the coverage floor. Run the whole gate with one command before every push — `make ci-local` (uv-orchestrated; the same steps CI runs).
 
 ## Attribution
 

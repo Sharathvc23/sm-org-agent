@@ -30,9 +30,7 @@ def canonical_string_v03(
     return f"{method.upper()}:{url_path}:{body}:{agent_id}:{timestamp}:{nonce}"
 
 
-def compose_headers(
-    agent_id: str, did_key: str, timestamp: str, signature_b64: str
-) -> dict[str, str]:
+def compose_headers(agent_id: str, did_key: str, timestamp: str, signature_b64: str) -> dict[str, str]:
     """The header set a v0.2 signed request carries."""
     return {
         "X-Agent-ID": agent_id,
