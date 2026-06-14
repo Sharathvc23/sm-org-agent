@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sm-member-sdk"
+name = "sm-agent"
 version = "0.1.0"
 description = "Client signing surface for federated AI-agent chapters — identity, canonical strings, Ed25519 signatures, headers."
 readme = "README.md"
@@ -17,7 +17,7 @@ dependencies = [
     "jcs>=0.2",
     # The canonical ARP receipt implementation. Now a published dependency — it
     # was vendored in-tree while sm-arp was private; sm-arp is public on PyPI.
-    "sm-arp>=0.1.4",
+    "sm-arp>=0.2.1",
 ]
 
 [project.optional-dependencies]
@@ -29,7 +29,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["sm_member_sdk"]
+packages = ["sm_agent"]
 
 [tool.ruff]
 line-length = 110
@@ -48,16 +48,16 @@ strict = true
 warn_unreachable = true
 
 # sm-arp ships no py.typed yet, so treat its symbols as untyped at the
-# sm_member_sdk boundary rather than failing strict mode.
+# sm_agent boundary rather than failing strict mode.
 [[tool.mypy.overrides]]
 module = "sm_arp.*"
 ignore_missing_imports = true
 follow_imports = "skip"
 
 [tool.pytest.ini_options]
-addopts = "-q --cov=sm_member_sdk --cov-report=term-missing --cov-fail-under=80"
+addopts = "-q --cov=sm_agent --cov-report=term-missing --cov-fail-under=80"
 testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-omit = ["sm_member_sdk/__init__.py"]
+omit = ["sm_agent/__init__.py"]

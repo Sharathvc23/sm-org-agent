@@ -6,8 +6,8 @@ import base64
 
 import pytest
 
-from sm_member_sdk import crypto
-from sm_member_sdk.identity import Identity
+from sm_agent import crypto
+from sm_agent.identity import Identity
 
 
 def test_generate_is_internally_consistent() -> None:

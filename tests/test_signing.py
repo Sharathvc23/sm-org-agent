@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from sm_member_sdk import crypto, signing
-from sm_member_sdk.identity import Identity
+from sm_agent import crypto, signing
+from sm_agent.identity import Identity
 
 
 def test_canonical_v02_format() -> None:

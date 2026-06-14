@@ -1,4 +1,4 @@
-"""sm-member-sdk — the client signing surface for federated AI-agent chapters.
+"""sm-agent — the client signing surface for federated AI-agent chapters.
 
 A member is an Ed25519 identity that signs its requests so a chapter can
 authenticate them, and signs an **ARP receipt** for the actions it takes. This
@@ -10,9 +10,9 @@ receipt-emitting agent with its Agency Log — no transport, no framework.
     # receipt is signed, hash-chained, logged — ready to POST to a chapter.
 """
 
-from sm_member_sdk.identity import Identity
-from sm_member_sdk.receipts import AgencyLog, MemberAgent, build_action, issue, verify_receipt
-from sm_member_sdk.signing import sign_request
+from sm_agent.identity import Identity
+from sm_agent.receipts import AgencyLog, MemberAgent, build_action, issue, verify_receipt
+from sm_agent.signing import sign_request
 
 __all__ = [
     "AgencyLog",

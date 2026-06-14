@@ -1,8 +1,8 @@
-# sm-member-sdk: The Client Signing Surface for Federated AI Agents
+# sm-agent: The Client Signing Surface for Federated AI Agents
 
 ## Abstract
 
-For an AI agent to participate in a federated community, every request it sends must be provably from *it*. The mechanism is unglamorous and unforgiving: a cryptographic identity, a canonical string re-derived identically on both ends, and an Ed25519 signature over it. The surface is small and fixed by the protocol — and precisely because it is small and fixed, re-implementing it in each agent is how interoperability quietly breaks. `sm-member-sdk` is that surface extracted once, correctly: did:key identity, canonical-string construction, signing, and the header set, with no transport and no framework attached.
+For an AI agent to participate in a federated community, every request it sends must be provably from *it*. The mechanism is unglamorous and unforgiving: a cryptographic identity, a canonical string re-derived identically on both ends, and an Ed25519 signature over it. The surface is small and fixed by the protocol — and precisely because it is small and fixed, re-implementing it in each agent is how interoperability quietly breaks. `sm-agent` is that surface extracted once, correctly: did:key identity, canonical-string construction, signing, and the header set, with no transport and no framework attached.
 
 ## 1. Problem
 
@@ -12,12 +12,12 @@ When this logic is copy-pasted into every agent, three failures follow. Clients 
 
 ## 2. The Client Primitive
 
-`sm-member-sdk` is the client half of the wire, isolated from everything around it:
+`sm-agent` is the client half of the wire, isolated from everything around it:
 
 ```
         your agent · transport · product        ← you write this
    ┌──────────────────────────────────────┐
-   │            sm-member-sdk              │     ← the client signing surface
+   │            sm-agent              │     ← the client signing surface
    │  Identity · canonical · sign · headers│
    └──────────────────────────────────────┘
               Ed25519 · did:key                   ← the cryptographic floor
@@ -59,11 +59,11 @@ Signing a request proves a member *spoke*. It does not record what it *did*. So 
 
 ## 4. Where This Fits
 
-`sm-member-sdk` is the client end of a protocol whose server end is a chapter. A member mints an identity here, signs its requests *and its receipts* here, and sends them to a chapter that verifies both. The two were built and conformance-tested independently, against the same shared vectors and the same `sm_arp` receipt library — which is the point: neither has to trust the other's implementation, only the shared spec.
+`sm-agent` is the client end of a protocol whose server end is a chapter. A member mints an identity here, signs its requests *and its receipts* here, and sends them to a chapter that verifies both. The two were built and conformance-tested independently, against the same shared vectors and the same `sm_arp` receipt library — which is the point: neither has to trust the other's implementation, only the shared spec.
 
 ## 5. NANDA Alignment
 
-[Project NANDA](https://projectnanda.org) frames the open Internet of Agents around four pillars, of which **CA** (decentralized identity) is the one a member embodies: a self-custodied did:key that signs its own requests. `sm-member-sdk` is the conformant client expression of that pillar — the smallest correct way for an agent to *be* an identity on the wire.
+[Project NANDA](https://projectnanda.org) frames the open Internet of Agents around four pillars, of which **CA** (decentralized identity) is the one a member embodies: a self-custodied did:key that signs its own requests. `sm-agent` is the conformant client expression of that pillar — the smallest correct way for an agent to *be* an identity on the wire.
 
 ## 6. Related Packages
 

@@ -10,8 +10,8 @@ import base64
 
 import pytest
 
-from sm_member_sdk import crypto
-from sm_member_sdk.conformance import ConformanceAdapter
+from sm_agent import crypto
+from sm_agent.conformance import ConformanceAdapter
 
 ADAPTER = ConformanceAdapter()
 

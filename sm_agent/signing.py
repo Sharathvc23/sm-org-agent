@@ -14,8 +14,8 @@ are fixed by the spec, not a convenience.
 
 from __future__ import annotations
 
-from sm_member_sdk import crypto
-from sm_member_sdk.identity import Identity
+from sm_agent import crypto
+from sm_agent.identity import Identity
 
 
 def canonical_string(body: str, agent_id: str, timestamp: str) -> str:

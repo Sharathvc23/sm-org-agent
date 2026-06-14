@@ -3,20 +3,20 @@
 The suite calls these six pure operations and asserts each against the spec's
 test vectors. A runtime that does its signing in one internal call still must
 expose the operations independently so each can be verified in isolation. Select
-it with ``--adapter=sm_member_sdk.conformance:ConformanceAdapter``.
+it with ``--adapter=sm_agent.conformance:ConformanceAdapter``.
 """
 
 from __future__ import annotations
 
 import base64
 
-from sm_member_sdk import crypto, signing
+from sm_agent import crypto, signing
 
 
 class ConformanceAdapter:
-    """Wraps :mod:`sm_member_sdk.crypto` + :mod:`sm_member_sdk.signing`."""
+    """Wraps :mod:`sm_agent.crypto` + :mod:`sm_agent.signing`."""
 
-    name = "sm-member-sdk"
+    name = "sm-agent"
     runtime_path = __file__
 
     def derive_did_key(self, pubkey32: bytes) -> str:

@@ -17,6 +17,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: ruff check sm_member_sdk tests
-      - run: mypy sm_member_sdk
+      - run: ruff check sm_agent tests
+      - run: mypy sm_agent
       - run: pytest

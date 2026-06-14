@@ -19,7 +19,7 @@ from typing import Any
 from sm_arp import AgencyLog, build_action, chain_link, issue_receipt, verify_receipt
 from sm_arp import Identity as _ArpIdentity
 
-from sm_member_sdk.identity import Identity
+from sm_agent.identity import Identity
 
 # A member is both a producer (issue / MemberAgent) and a consumer: it verifies
 # the receipts its counterparties present before trusting them. `verify_receipt`

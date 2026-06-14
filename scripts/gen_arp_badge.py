@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate sm-member-sdk's signed ARP conformance badge — mechanically.
+"""Generate sm-agent's signed ARP conformance badge — mechanically.
 
 Conformance is a run, not a declaration: this feeds the canonical ARP verifier
-corpus through the SDK's own consumer surface (``sm_member_sdk.verify_receipt``)
+corpus through the SDK's own consumer surface (``sm_agent.verify_receipt``)
 and counts accept-vs-reject against each vector's documented verdict, then signs
 the result with the member runtime key via sm-conformance (rung 1, self-signed).
 
@@ -27,7 +27,7 @@ from pathlib import Path
 
 from sm_arp import chain_link
 
-from sm_member_sdk import verify_receipt
+from sm_agent import verify_receipt
 
 ARP_REPO = Path(os.environ.get("ARP_REPO", str(Path.home() / "sm-arp"))).expanduser()
 sys.path.insert(0, str(ARP_REPO))  # for conformance.arp.badge + its vectors/schema
@@ -77,7 +77,7 @@ def main() -> int:
     print(f"ARP corpus: {passed} passed, {failed} failed, {skipped} skipped")
 
     badge = build_arp_badge(
-        "sm-member-sdk",
+        "sm-agent",
         passed=passed,
         failed=failed,
         skipped=skipped,

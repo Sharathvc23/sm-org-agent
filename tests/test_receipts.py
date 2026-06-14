@@ -13,7 +13,7 @@ from __future__ import annotations
 import pytest
 from sm_arp import chain_link, verify_receipt
 
-from sm_member_sdk import AgencyLog, Identity, MemberAgent, build_action, issue
+from sm_agent import AgencyLog, Identity, MemberAgent, build_action, issue
 
 
 @pytest.fixture
@@ -99,7 +99,7 @@ def test_tampered_logged_receipt_fails_verification(alice: Identity, tmp_path) -
 def test_sdk_verifies_a_counterpartys_receipt(alice: Identity) -> None:
     """The SDK is also a consumer: it verifies receipts presented by others
     before trusting them, via its own verify_receipt surface."""
-    from sm_member_sdk import verify_receipt as sdk_verify
+    from sm_agent import verify_receipt as sdk_verify
 
     bob = Identity.generate("bob")
     r = issue(bob, action=build_action(category="message_sent", human_summary="from bob"))

@@ -6,7 +6,7 @@ import base64
 
 import pytest
 
-from sm_member_sdk import crypto
+from sm_agent import crypto
 
 
 def test_keypair_and_did_round_trip() -> None:
