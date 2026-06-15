@@ -16,7 +16,7 @@ from sm_agent import crypto, signing
 class ConformanceAdapter:
     """Wraps :mod:`sm_agent.crypto` + :mod:`sm_agent.signing`."""
 
-    name = "sm-agent"
+    name = "sm-org-agent"
     runtime_path = __file__
 
     def derive_did_key(self, pubkey32: bytes) -> str:

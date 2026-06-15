@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sm-agent"
+name = "sm-org-agent"
 version = "0.1.0"
 description = "Client signing surface for federated AI-agent chapters — identity, canonical strings, Ed25519 signatures, headers."
 readme = "README.md"
@@ -37,9 +37,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Sharathvc23/sm-agent"
-Repository = "https://github.com/Sharathvc23/sm-agent"
-Changelog = "https://github.com/Sharathvc23/sm-agent/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Sharathvc23/sm-org-agent"
+Repository = "https://github.com/Sharathvc23/sm-org-agent"
+Changelog = "https://github.com/Sharathvc23/sm-org-agent/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sm_agent"]

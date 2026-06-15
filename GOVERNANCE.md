@@ -2,7 +2,7 @@
 
 ## Scope
 
-`sm-agent` is the client signing surface of the server protocol: identity (did:key), canonical-string construction, Ed25519 signing, and the header set, for v0.2 and v0.3. It is deliberately *not* a transport, an agent runtime, or a product. HTTP, retries, and agent behaviour live above this line, in your code.
+`sm-org-agent` is the client signing surface of the server protocol: identity (did:key), canonical-string construction, Ed25519 signing, and the header set, for v0.2 and v0.3. It is deliberately *not* a transport, an agent runtime, or a product. HTTP, retries, and agent behaviour live above this line, in your code.
 
 ## Versioning
 

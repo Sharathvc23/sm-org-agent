@@ -1,24 +1,24 @@
-# Publishing sm-agent to PyPI
+# Publishing sm-org-agent to PyPI
 
-`sm-agent` publishes via **PyPI Trusted Publishing** — no API tokens. You tell PyPI
+`sm-org-agent` publishes via **PyPI Trusted Publishing** — no API tokens. You tell PyPI
 once that this repo's `release.yml` workflow may publish; after that, pushing a
 version tag builds and uploads automatically.
 
-> Do this only when `sm-agent` is meant to be **public**.
+> Do this only when `sm-org-agent` is meant to be **public**.
 
 ## One-time setup (≈5 minutes — this is the part only you can do)
 
 1. Create / sign in to a PyPI account → https://pypi.org/account/register/ (enable 2FA).
 2. Go to **https://pypi.org/manage/account/publishing/** → "Add a pending
-   publisher" (use *pending*, because the `sm-agent` project doesn't exist on PyPI
+   publisher" (use *pending*, because the `sm-org-agent` project doesn't exist on PyPI
    yet — the first publish creates it).
 3. Fill the form with **exactly** these values:
 
    | Field | Value |
    |-------|-------|
-   | PyPI Project Name | `sm-agent` |
+   | PyPI Project Name | `sm-org-agent` |
    | Owner | `Sharathvc23` |
-   | Repository name | `sm-agent` |
+   | Repository name | `sm-org-agent` |
    | **Workflow name** | `release.yml`  ← just the filename |
    | Environment name | *(leave blank)* |
 
@@ -34,7 +34,7 @@ git push origin v0.1.0
 
 The `release` workflow builds the sdist + wheel, runs `twine check`, and uploads
 to PyPI over OIDC. Watch it under the repo's **Actions** tab. Within a minute,
-`pip install sm-agent` works for everyone.
+`pip install sm-org-agent` works for everyone.
 
 ## Notes
 

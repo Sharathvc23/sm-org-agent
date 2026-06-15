@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate sm-agent's signed ARP conformance badge — mechanically.
+"""Generate sm-org-agent's signed ARP conformance badge — mechanically.
 
 Conformance is a run, not a declaration: this feeds the canonical ARP verifier
 corpus through the SDK's own consumer surface (``sm_agent.verify_receipt``)
@@ -77,7 +77,7 @@ def main() -> int:
     print(f"ARP corpus: {passed} passed, {failed} failed, {skipped} skipped")
 
     badge = build_arp_badge(
-        "sm-agent",
+        "sm-org-agent",
         passed=passed,
         failed=failed,
         skipped=skipped,

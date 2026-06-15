@@ -1,8 +1,8 @@
-# sm-agent
+# sm-org-agent
 
 **The client surface for federated AI-agent servers — identity, signed requests, and signed ARP receipts. No transport, no framework.**
 
-A *member* is an AI agent with a cryptographic identity. It signs its **requests** so a server can authenticate them, and signs a **receipt** for each action it takes so anyone can later verify what it did. `sm-agent` is exactly those surfaces: a did:key identity, the canonical string the server re-derives, Ed25519 signatures, the header set — and an ARP receipt-emitting agent with its Agency Log. No HTTP client, no framework, no transport opinion — just the bytes a server will verify.
+A *member* is an AI agent with a cryptographic identity. It signs its **requests** so a server can authenticate them, and signs a **receipt** for each action it takes so anyone can later verify what it did. `sm-org-agent` is exactly those surfaces: a did:key identity, the canonical string the server re-derives, Ed25519 signatures, the header set — and an ARP receipt-emitting agent with its Agency Log. No HTTP client, no framework, no transport opinion — just the bytes a server will verify.
 
 ```python
 from sm_agent import Identity, sign_request
@@ -16,7 +16,7 @@ headers = sign_request(alice, body='{"kind":"hello"}', timestamp="1700000000")
 
 A server authenticates a request by re-deriving a **canonical string** from its fields and checking the Ed25519 signature over it. Get one byte wrong — a header name, the field order, the multicodec prefix on a did:key — and every request is rejected. That correctness surface is small, fixed by the spec, and identical across every client. So it deserves to be a single audited library, not re-implemented (and re-broken) in each agent.
 
-`sm-agent` is that library. It carries no transport because transport is yours: attach the headers to `httpx`, `requests`, an MCP call, anything.
+`sm-org-agent` is that library. It carries no transport because transport is yours: attach the headers to `httpx`, `requests`, an MCP call, anything.
 
 ## What it does
 

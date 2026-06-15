@@ -546,7 +546,21 @@ wheels = [
 ]
 
 [[package]]
-name = "sm-agent"
+name = "sm-arp"
+version = "0.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "base58" },
+    { name = "cryptography" },
+    { name = "jcs" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/7b/ec320e196dd4a82c2a4a0cc83474cf2302e29eaebb1b33bbb7579e02acd1/sm_arp-0.2.1.tar.gz", hash = "sha256:1d3b0f59c5fed899697434e8f87985d65dbcb06ef2fec4fcffd0fb2765fb4044", size = 26741, upload-time = "2026-06-12T23:49:56.105Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0b/c7/93a26f264e86dee7062c6b53fc67e3c909d01b62970aad8261e470c24cb5/sm_arp-0.2.1-py3-none-any.whl", hash = "sha256:7c16d475af5430351d9a6332075233b19390f85d228109896981643a71190233", size = 28412, upload-time = "2026-06-12T23:49:54.884Z" },
+]
+
+[[package]]
+name = "sm-org-agent"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -576,20 +590,6 @@ requires-dist = [
     { name = "sm-arp", specifier = ">=0.2.1" },
 ]
 provides-extras = ["dev"]
-
-[[package]]
-name = "sm-arp"
-version = "0.2.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "base58" },
-    { name = "cryptography" },
-    { name = "jcs" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/78/7b/ec320e196dd4a82c2a4a0cc83474cf2302e29eaebb1b33bbb7579e02acd1/sm_arp-0.2.1.tar.gz", hash = "sha256:1d3b0f59c5fed899697434e8f87985d65dbcb06ef2fec4fcffd0fb2765fb4044", size = 26741, upload-time = "2026-06-12T23:49:56.105Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/c7/93a26f264e86dee7062c6b53fc67e3c909d01b62970aad8261e470c24cb5/sm_arp-0.2.1-py3-none-any.whl", hash = "sha256:7c16d475af5430351d9a6332075233b19390f85d228109896981643a71190233", size = 28412, upload-time = "2026-06-12T23:49:54.884Z" },
-]
 
 [[package]]
 name = "tomli"

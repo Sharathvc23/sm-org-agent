@@ -1,4 +1,4 @@
-"""sm-agent — the client signing surface for federated AI-agent servers.
+"""sm-org-agent — the client signing surface for federated AI-agent servers.
 
 A member is an Ed25519 identity that signs its requests so a server can
 authenticate them, and signs an **ARP receipt** for the actions it takes. This
