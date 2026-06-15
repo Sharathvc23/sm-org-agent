@@ -10,7 +10,15 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 authors = [{ name = "stellarminds.ai" }]
-keywords = ["agents", "ed25519", "did", "signing", "conformance"]
+keywords = ["agents", "ed25519", "did", "signing", "conformance", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+]
 dependencies = [
     "cryptography>=42",
     "base58>=2.1",
@@ -27,6 +35,11 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.11",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Sharathvc23/sm-agent"
+Repository = "https://github.com/Sharathvc23/sm-agent"
+Changelog = "https://github.com/Sharathvc23/sm-agent/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sm_agent"]
