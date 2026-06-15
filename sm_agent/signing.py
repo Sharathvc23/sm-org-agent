@@ -1,6 +1,6 @@
 """Signed-request construction — the client half of the protocol wire.
 
-A chapter authenticates a request by re-deriving a *canonical string* from its
+A server authenticates a request by re-deriving a *canonical string* from its
 fields and verifying the Ed25519 signature over it. The client's only job is to
 build that exact string, sign it, and attach the agreed headers. Two schemes:
 
@@ -8,7 +8,7 @@ build that exact string, sign it, and attach the agreed headers. Two schemes:
 - **v0.3** — ``METHOD:url_path:body:agent_id:timestamp:nonce`` with a per-request
   nonce and ``ed25519+nonce`` (replay-resistant).
 
-Get one byte wrong here and the chapter rejects the signature, so these formats
+Get one byte wrong here and the server rejects the signature, so these formats
 are fixed by the spec, not a convenience.
 """
 

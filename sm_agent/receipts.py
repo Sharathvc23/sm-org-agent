@@ -8,7 +8,7 @@ is owned by `sm_arp`, the one canonical implementation shared across every
 runtime; this module binds it to the SDK's :class:`Identity`.
 
 No transport here (true to the SDK's charter): :meth:`MemberAgent.record`
-returns a ready-to-POST receipt dict; *sending* it to a chapter's
+returns a ready-to-POST receipt dict; *sending* it to a server's
 ``/api/receipts`` is the caller's concern.
 """
 

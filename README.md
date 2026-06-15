@@ -1,20 +1,20 @@
 # sm-agent
 
-**The client surface for federated AI-agent chapters — identity, signed requests, and signed ARP receipts. No transport, no framework.**
+**The client surface for federated AI-agent servers — identity, signed requests, and signed ARP receipts. No transport, no framework.**
 
-A *member* is an AI agent with a cryptographic identity. It signs its **requests** so a chapter can authenticate them, and signs a **receipt** for each action it takes so anyone can later verify what it did. `sm-agent` is exactly those surfaces: a did:key identity, the canonical string the chapter re-derives, Ed25519 signatures, the header set — and an ARP receipt-emitting agent with its Agency Log. No HTTP client, no framework, no transport opinion — just the bytes a chapter will verify.
+A *member* is an AI agent with a cryptographic identity. It signs its **requests** so a server can authenticate them, and signs a **receipt** for each action it takes so anyone can later verify what it did. `sm-agent` is exactly those surfaces: a did:key identity, the canonical string the server re-derives, Ed25519 signatures, the header set — and an ARP receipt-emitting agent with its Agency Log. No HTTP client, no framework, no transport opinion — just the bytes a server will verify.
 
 ```python
 from sm_agent import Identity, sign_request
 
 alice = Identity.generate("alice")          # keypair + did:key
 headers = sign_request(alice, body='{"kind":"hello"}', timestamp="1700000000")
-# → attach `headers` to your POST; the chapter verifies the signature
+# → attach `headers` to your POST; the server verifies the signature
 ```
 
 ## Why a separate, tiny SDK
 
-A chapter authenticates a request by re-deriving a **canonical string** from its fields and checking the Ed25519 signature over it. Get one byte wrong — a header name, the field order, the multicodec prefix on a did:key — and every request is rejected. That correctness surface is small, fixed by the spec, and identical across every client. So it deserves to be a single audited library, not re-implemented (and re-broken) in each agent.
+A server authenticates a request by re-deriving a **canonical string** from its fields and checking the Ed25519 signature over it. Get one byte wrong — a header name, the field order, the multicodec prefix on a did:key — and every request is rejected. That correctness surface is small, fixed by the spec, and identical across every client. So it deserves to be a single audited library, not re-implemented (and re-broken) in each agent.
 
 `sm-agent` is that library. It carries no transport because transport is yours: attach the headers to `httpx`, `requests`, an MCP call, anything.
 
@@ -35,7 +35,7 @@ A chapter authenticates a request by re-deriving a **canonical string** from its
 ### Two signing schemes
 
 - **v0.2** — canonical `body:agent_id:timestamp`, scheme `ed25519`.
-- **v0.3** — canonical `METHOD:url_path:body:agent_id:timestamp:nonce`, scheme `ed25519+nonce`, with a per-request nonce the chapter tracks to reject replays.
+- **v0.3** — canonical `METHOD:url_path:body:agent_id:timestamp:nonce`, scheme `ed25519+nonce`, with a per-request nonce the server tracks to reject replays.
 
 `sign_request` selects v0.3 when you pass `method`, `url_path`, and `nonce`; otherwise v0.2.
 
@@ -50,7 +50,7 @@ from sm_agent import Identity, MemberAgent, AgencyLog
 
 agent = MemberAgent(Identity.generate("alice"), AgencyLog("alice.sqlite"))
 receipt = agent.record(category="data_shared", human_summary="shared my calendar")
-# signed, hash-chained, logged — ready to POST to a chapter's /api/receipts
+# signed, hash-chained, logged — ready to POST to a server's /api/receipts
 ```
 
 The same identity signs both requests and receipts; `did:key` derivation is byte-identical to the canonical [`sm_arp`](https://github.com/Sharathvc23/sm-arp) library, so a receipt is attributed to the member's DID. A member is also a *consumer* — `verify_receipt` checks the receipts its counterparties present before trusting them.
@@ -59,7 +59,7 @@ The same identity signs both requests and receipts; `did:key` derivation is byte
 
 The SDK ships **two** signed badges:
 
-- `.nanda/conformance.json` — the chapter-protocol **client** suite, via a `ConformanceAdapter`:
+- `.nanda/conformance.json` — the server-protocol **client** suite, via a `ConformanceAdapter`:
   ```
   pytest conformance/client --adapter=sm_agent.conformance:ConformanceAdapter
   ```

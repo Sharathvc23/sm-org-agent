@@ -1,4 +1,4 @@
-"""Conformance adapter — plugs this SDK into the chapter-protocol client suite.
+"""Conformance adapter — plugs this SDK into the server-protocol client suite.
 
 The suite calls these six pure operations and asserts each against the spec's
 test vectors. A runtime that does its signing in one internal call still must

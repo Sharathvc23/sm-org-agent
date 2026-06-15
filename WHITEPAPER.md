@@ -6,9 +6,9 @@ For an AI agent to participate in a federated community, every request it sends 
 
 ## 1. Problem
 
-A chapter authenticates an incoming request by reconstructing the exact string the client claims to have signed and verifying the signature against the presented public key. Every field matters: the order of `body:agent_id:timestamp`, the casing of `X-Agent-Sig-Scheme`, the `0xed01` multicodec prefix that turns a raw public key into a did:key. A single deviation is not a degraded experience — it is a `401`. The whole request is rejected.
+A server authenticates an incoming request by reconstructing the exact string the client claims to have signed and verifying the signature against the presented public key. Every field matters: the order of `body:agent_id:timestamp`, the casing of `X-Agent-Sig-Scheme`, the `0xed01` multicodec prefix that turns a raw public key into a did:key. A single deviation is not a degraded experience — it is a `401`. The whole request is rejected.
 
-When this logic is copy-pasted into every agent, three failures follow. Clients drift from the spec in small ways and only discover it against a live chapter. A client that *thinks* it is compatible cannot prove it. And a protocol upgrade (v0.2 → v0.3) has to be chased through every copy. The surface that makes federation possible becomes the surface that makes it fragile.
+When this logic is copy-pasted into every agent, three failures follow. Clients drift from the spec in small ways and only discover it against a live server. A client that *thinks* it is compatible cannot prove it. And a protocol upgrade (v0.2 → v0.3) has to be chased through every copy. The surface that makes federation possible becomes the surface that makes it fragile.
 
 ## 2. The Client Primitive
 
@@ -27,11 +27,11 @@ It depends only on `cryptography` and `base58`. It returns headers, not requests
 
 ## 3. Design Axioms
 
-### 3.1 Build the bytes the chapter will verify, exactly
+### 3.1 Build the bytes the server will verify, exactly
 
 The canonical string and header set are not conveniences; they are the contract. The SDK produces them to the letter of the spec.
 
-**Consequence:** the SDK is byte-for-byte equivalent to the reference implementation. The conformance suite asserts this against shared vectors — a deviation fails before any chapter is involved.
+**Consequence:** the SDK is byte-for-byte equivalent to the reference implementation. The conformance suite asserts this against shared vectors — a deviation fails before any server is involved.
 
 ### 3.2 Transport is not our concern
 
@@ -49,17 +49,17 @@ v0.2 (`ed25519`) and v0.3 (`ed25519+nonce`, replay-resistant) share an identity 
 
 The SDK exposes its operations to a conformance adapter and ships a signed badge attesting it passes the client suite.
 
-**Consequence:** "this client speaks the protocol" becomes a verifiable artifact, not a claim — exactly what a chapter or registry can demand before trusting a signature.
+**Consequence:** "this client speaks the protocol" becomes a verifiable artifact, not a claim — exactly what a server or registry can demand before trusting a signature.
 
 ### 3.5 A member's actions leave receipts
 
-Signing a request proves a member *spoke*. It does not record what it *did*. So a member also issues an [ARP](https://github.com/Sharathvc23/sm-arp) receipt for each action — the same Ed25519 identity, now signing a JCS-canonical, hash-chained envelope — and keeps them in an **Agency Log**. The receipt envelope is the one canonical `sm_arp` library, shared with the chapter, so `did:key` derivation and canonical bytes are byte-identical on both ends. A member verifies its counterparties' receipts through the same library before trusting them.
+Signing a request proves a member *spoke*. It does not record what it *did*. So a member also issues an [ARP](https://github.com/Sharathvc23/sm-arp) receipt for each action — the same Ed25519 identity, now signing a JCS-canonical, hash-chained envelope — and keeps them in an **Agency Log**. The receipt envelope is the one canonical `sm_arp` library, shared with the server, so `did:key` derivation and canonical bytes are byte-identical on both ends. A member verifies its counterparties' receipts through the same library before trusting them.
 
 **Consequence:** the member is a first-class participant in a verifiable history, not just an authenticated caller. Its actions are attributable to its DID without a trusted intermediary, and it ships a second signed badge attesting it passes the ARP receipt suite — run mechanically through its own `verify_receipt` surface.
 
 ## 4. Where This Fits
 
-`sm-agent` is the client end of a protocol whose server end is a chapter. A member mints an identity here, signs its requests *and its receipts* here, and sends them to a chapter that verifies both. The two were built and conformance-tested independently, against the same shared vectors and the same `sm_arp` receipt library — which is the point: neither has to trust the other's implementation, only the shared spec.
+`sm-agent` is the client end of a protocol whose server end is a server. A member mints an identity here, signs its requests *and its receipts* here, and sends them to a server that verifies both. The two were built and conformance-tested independently, against the same shared vectors and the same `sm_arp` receipt library — which is the point: neither has to trust the other's implementation, only the shared spec.
 
 ## 5. NANDA Alignment
 
