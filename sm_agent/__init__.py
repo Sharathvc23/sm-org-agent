@@ -12,7 +12,7 @@ receipt-emitting agent with its Agency Log — no transport, no framework.
 
 from sm_agent.identity import Identity
 from sm_agent.receipts import AgencyLog, MemberAgent, build_action, issue, verify_receipt
-from sm_agent.signing import sign_request
+from sm_agent.signing import make_nonce, now_ts, sign_request
 
 __all__ = [
     "AgencyLog",
@@ -20,6 +20,8 @@ __all__ = [
     "MemberAgent",
     "build_action",
     "issue",
+    "make_nonce",
+    "now_ts",
     "sign_request",
     "verify_receipt",
 ]
