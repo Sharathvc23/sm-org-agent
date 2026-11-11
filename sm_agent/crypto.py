@@ -27,6 +27,13 @@ def generate_keypair() -> tuple[bytes, bytes]:
     return priv.private_bytes_raw(), pub
 
 
+def public_key_from_seed(private_key32: bytes) -> bytes:
+    """The 32-byte Ed25519 public key a 32-byte seed determines."""
+    if len(private_key32) != 32:
+        raise ValueError(f"Ed25519 seed must be 32 bytes, got {len(private_key32)}")
+    return Ed25519PrivateKey.from_private_bytes(private_key32).public_key().public_bytes_raw()
+
+
 def derive_did_key(pubkey32: bytes) -> str:
     """32-byte Ed25519 public key → ``did:key:z<base58btc(0xed01 ‖ pubkey)>``."""
     if len(pubkey32) != 32:

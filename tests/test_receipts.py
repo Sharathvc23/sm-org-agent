@@ -76,6 +76,71 @@ def test_chain_resumes_from_existing_log(alice: Identity, tmp_path) -> None:
     assert verify_receipt(second, prior=first, check_chain=True).ok
 
 
+def test_chain_resumes_from_true_head_when_issued_at_ties(
+    alice: Identity, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Three receipts in one second share an ``issued_at``; the log's ordering has
+    no tiebreaker, so a restart must find the head by the chain, not by storage
+    order. Storage order is made to disagree with chain order here the way it
+    does in production: the genesis is re-appended (the log's idempotent
+    re-append, e.g. after a re-sync), which gives it the newest rowid."""
+    import sm_arp.receipts
+
+    monkeypatch.setattr(sm_arp.receipts, "now_iso", lambda: "2026-11-11T12:00:00Z")
+    log = AgencyLog(tmp_path / "alice.sqlite")
+    agent = MemberAgent(alice, log)
+    chain = [agent.record(category="vote_cast", human_summary=f"r{i}") for i in range(3)]
+    assert len({r["issued_at"] for r in chain}) == 1
+    log.append(chain[0])
+    assert log.count() == 3
+    monkeypatch.undo()
+
+    resumed = MemberAgent(alice, log)
+    fourth = resumed.record(category="vote_cast", human_summary="r4")
+    assert fourth["previous_receipt_hash"] == chain_link(chain[-1])
+    assert verify_receipt(fourth, prior=chain[-1], check_chain=True).ok
+    # The whole log is one unbroken chain: every link but the genesis has exactly one predecessor.
+    receipts = {chain_link(r): r for r in (*chain, fourth)}
+    for r in receipts.values():
+        prev = r.get("previous_receipt_hash")
+        assert prev is None or prev in receipts
+
+
+def test_chain_head_widens_its_window_past_one_second_of_receipts(
+    alice: Identity, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import sm_arp.receipts
+
+    from sm_agent.receipts import chain_head
+
+    monkeypatch.setattr(sm_arp.receipts, "now_iso", lambda: "2026-11-11T12:00:00Z")
+    log = AgencyLog(tmp_path / "alice.sqlite")
+    agent = MemberAgent(alice, log)
+    last = [agent.record(category="vote_cast", human_summary=f"r{i}") for i in range(40)][-1]
+    assert chain_head(log, alice.did_key) == last
+    assert chain_head(log, "did:key:z6MkNobody") is None
+
+
+def test_forked_log_is_refused_on_resume(alice: Identity, tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Two receipts both claiming the same predecessor is a fork — picking one
+    silently would extend it, so resume refuses."""
+    import sm_arp.receipts
+
+    monkeypatch.setattr(sm_arp.receipts, "now_iso", lambda: "2026-11-11T12:00:00Z")
+    log = AgencyLog(tmp_path / "alice.sqlite")
+    genesis = MemberAgent(alice, log).record(category="vote_cast", human_summary="g")
+    for i in range(2):
+        log.append(
+            issue(
+                alice,
+                action=build_action(category="vote_cast", human_summary=f"fork{i}"),
+                previous_receipt_hash=chain_link(genesis),
+            )
+        )
+    with pytest.raises(ValueError, match="forked"):
+        MemberAgent(alice, log)
+
+
 # ── adversarial ────────────────────────────────────────────────────
 
 
