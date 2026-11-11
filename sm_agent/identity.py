@@ -21,10 +21,18 @@ class Identity:
     did_key: str
 
     def __post_init__(self) -> None:
+        # The seed determines the public key, and the public key determines the
+        # did:key. Refuse an Identity whose parts disagree: a mismatched pair
+        # would sign with one key while advertising another, and every request
+        # would fail verification at the server with no hint of why.
         if len(self.private_key) != 32:
             raise ValueError(f"private key must be 32 bytes, got {len(self.private_key)}")
-        if len(self.public_key) != 32:
-            raise ValueError(f"public key must be 32 bytes, got {len(self.public_key)}")
+        expected_pub = crypto.public_key_from_seed(self.private_key)
+        if self.public_key != expected_pub:
+            raise ValueError("public key does not match the one derived from the private seed")
+        expected_did = crypto.derive_did_key(expected_pub)
+        if self.did_key != expected_did:
+            raise ValueError(f"did_key {self.did_key!r} does not match the public key ({expected_did!r})")
 
     @classmethod
     def generate(cls, agent_id: str) -> Identity:
@@ -35,11 +43,7 @@ class Identity:
     @classmethod
     def from_seed(cls, agent_id: str, private_key: bytes) -> Identity:
         """Reconstruct an identity from a stored 32-byte seed."""
-        if len(private_key) != 32:
-            raise ValueError(f"private key must be 32 bytes, got {len(private_key)}")
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-
-        pub = Ed25519PrivateKey.from_private_bytes(private_key).public_key().public_bytes_raw()
+        pub = crypto.public_key_from_seed(private_key)
         return cls(agent_id, private_key, pub, crypto.derive_did_key(pub))
 
     @property
