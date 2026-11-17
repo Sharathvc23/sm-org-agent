@@ -129,16 +129,46 @@ def test_forked_log_is_refused_on_resume(alice: Identity, tmp_path, monkeypatch:
     monkeypatch.setattr(sm_arp.receipts, "now_iso", lambda: "2026-11-11T12:00:00Z")
     log = AgencyLog(tmp_path / "alice.sqlite")
     genesis = MemberAgent(alice, log).record(category="vote_cast", human_summary="g")
-    for i in range(2):
-        log.append(
-            issue(
-                alice,
-                action=build_action(category="vote_cast", human_summary=f"fork{i}"),
-                previous_receipt_hash=chain_link(genesis),
-            )
+    forks = [
+        issue(
+            alice,
+            action=build_action(category="vote_cast", human_summary=f"fork{i}"),
+            previous_receipt_hash=chain_link(genesis),
         )
+        for i in range(2)
+    ]
+    log.append(forks[0])
+    # Newer sm-arp refuses a fork at append time, so plant the second branch the
+    # way a log written by an older release, or edited on disk, would hold it.
+    # Resume must still refuse whatever the log contains.
+    _plant(tmp_path / "alice.sqlite", forks[1])
     with pytest.raises(ValueError, match="forked"):
         MemberAgent(alice, log)
+
+
+def _plant(path, receipt: dict) -> None:
+    """Write a receipt row directly, bypassing the log's own append checks."""
+    import json
+    import sqlite3
+
+    action = receipt.get("action") or {}
+    with sqlite3.connect(path) as c:
+        c.execute(
+            "INSERT INTO receipts (receipt_id, issuer_did, principal_did, issued_at, category, "
+            "counterparty_did, previous_receipt_hash, chain_link, receipt_json) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                receipt["receipt_id"],
+                receipt["issuer_did"],
+                receipt["principal_did"],
+                receipt["issued_at"],
+                action.get("category"),
+                action.get("counterparty_did"),
+                receipt.get("previous_receipt_hash"),
+                chain_link(receipt),
+                json.dumps(receipt, separators=(",", ":")),
+            ),
+        )
 
 
 # ── adversarial ────────────────────────────────────────────────────
